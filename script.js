@@ -16,10 +16,18 @@ class Calculator{
  }
 
  appendNumber(number){
+     if(number === '.' && this.currentOperand.includes('.')) return;
     this.currentOperand = (this.currentOperand ?? '') + number;
  }
 
- chooseOperation(operations){
+ chooseOperation(operation){
+     if(this.currentOperand === '')return;
+     if(this.previousOperand !== ''){
+         this.compute();
+     }
+     this.operation = operation;
+     this.previousOperand = this.currentOperand;
+     this.currentOperand = '';
 
  }
 
@@ -29,13 +37,14 @@ class Calculator{
 
  updateDisplay(){
         this.curOpText.innerText = this.currentOperand;
+        this.prevOpText.innerText = this.previousOperand;
  }
 
 }
 
 
 const numberButtons = document.querySelectorAll('[data-number]');
-const operationButtons = document.querySelectorAll('[data-operations]');
+const operationButtons = document.querySelectorAll('[data-operation]');
 const equalsButton = document.querySelectorAll('[data-equals]');
 const deleteButton = document.querySelector('[data-delete]');
 const clearAllButton = document.querySelector('[data-clear]');
@@ -49,5 +58,13 @@ numberButtons.forEach(button =>{
         calculator.appendNumber(button.innerText);
         calculator.updateDisplay();
     })
+});
+
+operationButtons.forEach(button =>{
+    button.addEventListener('click',()=>{
+        calculator.chooseOperation(button.innerText);
+        calculator.updateDisplay();
+    })
 })
+
 
